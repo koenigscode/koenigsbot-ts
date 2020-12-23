@@ -1,7 +1,9 @@
 import axios from 'axios'
 import { Context } from 'telegraf'
 import { Command, TFController, TFContext } from 'ts-telegraf-decorators'
+import MyContext from '../config/MyContext'
 import Help from '../decorators/Help'
+import { waitMenu, waitMenuMiddleware } from '../middleware/menu/WaitMenu'
 import { getContent, getValidUrl } from '../util'
 
 @TFController()
@@ -54,6 +56,12 @@ export default class {
     @Help('cat', 'Send a random cat pic from random.cat')
     cat(@TFContext() ctx: Context): void {
         ctx.replyWithPhoto(`http://random.cat/view/${Date.now() % 1000}`)
+    }
+
+    @Command('wait')
+    @Help('wait', 'Creates a poll, asking who is waiting')
+    wait(@TFContext() ctx: MyContext): void {
+        waitMenuMiddleware.replyToContext(ctx)
     }
 
 }
