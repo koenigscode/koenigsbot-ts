@@ -21,6 +21,7 @@ bot.catch((err, ctx) => {
 })
 
 console.table(commands)
+commands.push({ command: 'help', description: 'test' })
 bot.telegram.setMyCommands(commands)
 
-bot.startPolling()
+bot.launch()
