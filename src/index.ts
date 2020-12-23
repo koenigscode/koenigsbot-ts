@@ -20,7 +20,7 @@ bot.catch((err, ctx) => {
     ctx.reply(err.message)
 })
 
-console.table(commands)
-bot.telegram.setMyCommands(commands)
-
-bot.launch()
+bot.launch().then(() => {
+    console.table(commands)
+    bot.telegram.setMyCommands(commands)
+})
