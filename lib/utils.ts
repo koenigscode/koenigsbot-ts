@@ -1,0 +1,1 @@
+export const getContent = (text: string): string => text.substr(text.indexOf(' ') + 1)
