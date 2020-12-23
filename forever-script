@@ -1,0 +1,4 @@
+#!/bin/bash
+
+npm i
+forever start -c 'npm start' ./
