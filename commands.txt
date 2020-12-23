@@ -1,3 +1,0 @@
-mock - tRaNsFoRm ThE tExT tO mOcKiNg CaPiTaLs
-poll - Create a quick poll by seperating question and answers by a new line
-cat - Send a random cat pic from random.cat
