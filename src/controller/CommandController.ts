@@ -3,6 +3,7 @@ import { Context } from 'telegraf'
 import { Command, TFController, TFContext } from 'ts-telegraf-decorators'
 import Help from '../decorators/Help'
 import { getContent, getValidUrl } from '../util'
+import * as fs from 'fs'
 
 @TFController()
 export default class {
@@ -54,6 +55,12 @@ export default class {
     @Help('cat', 'Send a random cat pic from random.cat')
     cat(@TFContext() ctx: Context): void {
         ctx.replyWithPhoto(`http://random.cat/view/${Date.now() % 1000}`)
+    }
+
+    @Command('semmi')
+    @Help('semmi', 'Sends a gif of semmi')
+    semmi(@TFContext() ctx: Context): void {
+        ctx.telegram.sendAnimation(ctx.chat.id, {source: fs.createReadStream('media/semmi.gif')})
     }
 
 }
