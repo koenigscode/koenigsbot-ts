@@ -5,6 +5,7 @@ import MyContext from '../config/MyContext'
 import Help from '../decorators/Help'
 import { waitMenu, waitMenuMiddleware } from '../middleware/menu/WaitMenu'
 import { getContent, getValidUrl } from '../util'
+import * as fs from 'fs'
 
 @TFController()
 export default class {
@@ -62,6 +63,13 @@ export default class {
     @Help('wait', 'Creates a poll, asking who is waiting')
     wait(@TFContext() ctx: MyContext): void {
         waitMenuMiddleware.replyToContext(ctx)
+
+    }
+
+    @Command('semmi')
+    @Help('semmi', 'Sends a gif of semmi')
+    semmi(@TFContext() ctx: Context): void {
+        ctx.telegram.sendAnimation(ctx.chat.id, { source: fs.createReadStream('media/semmi.gif') })
     }
 
 }
