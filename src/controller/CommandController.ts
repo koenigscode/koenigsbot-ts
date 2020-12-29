@@ -1,13 +1,15 @@
 import axios from 'axios'
 import { Context } from 'telegraf'
-import { Command, TFController, TFContext } from 'ts-telegraf-decorators'
+import { Command, TFController, TFContext, UseMiddleware } from 'ts-telegraf-decorators'
 import MyContext from '../config/MyContext'
 import Help from '../decorators/Help'
-import { waitMenu, waitMenuMiddleware } from '../middleware/menu/WaitMenu'
 import { getContent, getValidUrl } from '../util'
 import * as fs from 'fs'
+import RateLimitMiddleware from '../middleware/RateLimitMiddleware'
 
 @TFController()
+@UseMiddleware(RateLimitMiddleware)
+// @UseMiddleware(WaitMenuMiddleware)
 export default class {
 
     @Command('mock')
@@ -16,7 +18,14 @@ export default class {
         let res = ''
         let isUpper = false
 
-        for (const c of getContent(ctx.message.text)) {
+        const content = getContent(ctx.message.text)
+
+        if (content === '') {
+            ctx.reply('No text to mock provided')
+            return
+        }
+
+        for (const c of content) {
             res += isUpper ? c.toUpperCase() : c.toLowerCase()
             if (c != ' ' && c != '\n') isUpper = !isUpper
         }
@@ -28,13 +37,13 @@ export default class {
     @Help('poll', 'Create a quick poll by seperating question and answers by a new line')
     async poll(@TFContext() ctx: Context): Promise<void> {
         const msg = getContent(ctx.message.text)
-        const [question, ...options] = msg.split('\n')
         try {
+            const [question, ...options] = msg.split('\n')
             await ctx.replyWithPoll(question, options, { is_anonymous: false })
         } catch (err) {
-            throw new Error('Poll must have at least 2 options')
+            ctx.reply('Poll must have at least 2 options')
         }
-        ctx.deleteMessage()
+        ctx.deleteMessage().catch(() => { console.log('couldn\'t delete message') })
     }
 
     @Command('shorten')
@@ -59,12 +68,11 @@ export default class {
         ctx.replyWithPhoto(`http://random.cat/view/${Date.now() % 1000}`)
     }
 
-    @Command('wait')
-    @Help('wait', 'Creates a poll, asking who is waiting')
-    wait(@TFContext() ctx: MyContext): void {
-        waitMenuMiddleware.replyToContext(ctx)
-
-    }
+    // @Command('wait')
+    // @Help('wait', 'Creates a poll, asking who is waiting')
+    // wait(@TFContext() ctx: MyContext): void {
+    //     waitMenu.replyToContext(ctx)
+    // }
 
     @Command('semmi')
     @Help('semmi', 'Sends a gif of semmi')

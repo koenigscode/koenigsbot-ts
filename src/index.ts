@@ -7,7 +7,7 @@ import { buildBot } from 'ts-telegraf-decorators'
 import limitConfig from './config/LimitConfig'
 import { commands } from './decorators/Help'
 import MyContext from './config/MyContext'
-import { waitMenuMiddleware } from './middleware/menu/WaitMenu'
+// import { waitMenuMiddleware } from './middleware/WaitMenuMiddleware'
 
 dotenv.config()
 
@@ -16,14 +16,14 @@ const bot: Telegraf<MyContext> = buildBot({
     controllers: [__dirname + '/controller/**.ts'],
 })
 
-bot.use(rateLimit(limitConfig))
+// bot.use(rateLimit(limitConfig))
 
 bot.catch((err, ctx) => {
     console.log(err)
     ctx.reply(err.message)
 })
 
-bot.use(waitMenuMiddleware)
+// bot.use(waitMenuMiddleware)
 
 bot.launch().then(() => {
     console.table(commands)
