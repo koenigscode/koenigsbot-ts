@@ -33,6 +33,24 @@ export default class {
         ctx.reply(res)
     }
 
+    @Command('clap')
+    @Help('clap', 'adds 👏 emojis')
+    clap(@TFContext() ctx: Context): void {
+        const content = getContent(ctx.message.text)
+
+        if (content.trim() === '') {
+            ctx.reply('Message is empty')
+            return
+        }
+
+        if (content.indexOf(' ') === -1) {
+            ctx.reply('String doesn\'t contain any spaces')
+            return
+        }
+
+        ctx.reply(content.split(' ').join(' 👏 '))
+    }
+
     @Command('poll')
     @Help('poll', 'Create a quick poll by seperating question and answers by a new line')
     async poll(@TFContext() ctx: Context): Promise<void> {
